@@ -14,6 +14,8 @@ class AppConstants {
   static const updatemyprofiledata = 'profile/update';
   static const getuseraddresses = 'address';
   static const customersupport = 'support/create';
-  static const getallblogs = 'blog?page=';
+  static const getallblogs = 'blog/user?page=';
   static const getblogbyid = 'blog/get-by-id/';
+  static const usersearchbusiness = 'business/search?';
+  static const getbusinesscategories = 'category';
 }

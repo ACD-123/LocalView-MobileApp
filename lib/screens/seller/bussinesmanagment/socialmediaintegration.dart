@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:localview/constants/appcolors.dart';
 import 'package:localview/customwidgets/customappbar.dart';
 import 'package:localview/customwidgets/custombutton.dart';
-import 'package:localview/customwidgets/emailtextfield.dart';
 
 class SocialMediaScreen extends StatefulWidget {
   const SocialMediaScreen({super.key});

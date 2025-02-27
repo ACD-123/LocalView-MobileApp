@@ -115,7 +115,7 @@ Padding customFavDetailContainer({
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(8.sp),
-                child: Image.asset(
+                child: Image.network(
                   image,
                   height: 70.h,
                   width: 80.w,

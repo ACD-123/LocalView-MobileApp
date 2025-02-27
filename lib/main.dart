@@ -4,13 +4,17 @@ import 'package:get/get.dart';
 import 'package:localview/bindings/appbindings.dart';
 import 'package:localview/helpers/routeconstants.dart';
 import 'package:localview/helpers/routemanagment.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'services/dependencies.dart' as dep;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dep.init();
-
+   await [
+    Permission.location,
+    Permission.microphone,
+  ].request();
   runApp(const MyApp());
 }
 
@@ -20,6 +24,7 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
+
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override

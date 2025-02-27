@@ -6,7 +6,6 @@ import 'package:localview/constants/appcolors.dart';
 import 'package:localview/constants/fontfamily.dart';
 import 'package:localview/controller/bussinescontroller.dart';
 import 'package:localview/customwidgets/customappbar.dart';
-import 'package:localview/customwidgets/custombutton.dart';
 import 'package:localview/helpers/routeconstants.dart';
 
 class SecurityScreen extends StatefulWidget {

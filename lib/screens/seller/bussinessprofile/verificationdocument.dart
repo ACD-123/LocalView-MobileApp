@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:localview/constants/appcolors.dart';
 import 'package:localview/customwidgets/custombutton.dart';
-import 'package:localview/helpers/routeconstants.dart';
 
 class VerifyDocumentsScreen extends StatelessWidget {
   const VerifyDocumentsScreen({super.key});

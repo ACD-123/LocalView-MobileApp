@@ -24,12 +24,16 @@ customNotDataText({
 
 //////////////dummy loader
 Container customDummyLoader({
-   dynamic height,
-   dynamic width,
+  dynamic height,
+  dynamic width,
+  Color? color,
 }) {
   return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12.sp),
+      color: color ?? AppColors.black.withOpacity(0.04),
+    ),
     height: height ?? 50.h,
     width: width ?? Get.width,
-    color: AppColors.black.withOpacity(0.04),
   );
 }
