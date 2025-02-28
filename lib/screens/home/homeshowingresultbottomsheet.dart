@@ -71,6 +71,20 @@ Widget homeshowingresultbottomsheet(
                             ),
                           ),
                           const Spacer(),
+                           GestureDetector(
+                              onTap: () {
+                                Get.toNamed(RouteConstants.filterscreen);
+                              },
+                              child: Image.asset(
+                                "assets/images/filtericon.png",
+                                height: 15.h,
+                                width: 15.w,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                        SizedBox(
+                              width: 8.w,
+                            ),
                           GestureDetector(
                             onTap: () {
                               componentcontroller.homeSearchResultIcon.value =
@@ -89,70 +103,60 @@ Widget homeshowingresultbottomsheet(
                       SizedBox(
                         height: 8.h,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.toNamed(RouteConstants.filterscreen);
-                              },
-                              child: Image.asset(
-                                "assets/images/filtericon.png",
-                                height: 20.h,
-                                width: 20.w,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15.w,
-                            ),
-                            customCatgegorySelectedContainer(
-                                ontap: () {
-                                  componentcontroller
-                                      .showingResulttabSelectd("distance");
-                                  componentcontroller.showingresultlist
-                                      .shuffle();
-                                },
-                                title: "Distance",
-                                isSelected: componentcontroller
-                                        .showingResulttabSelectd.value ==
-                                    "distance"),
-                            SizedBox(
-                              width: 15.w,
-                            ),
-                            customCatgegorySelectedContainer(
-                                ontap: () {
-                                  componentcontroller
-                                      .showingResulttabSelectd("opennow");
-                                  componentcontroller.showingresultlist
-                                      .shuffle();
-                                },
-                                title: "Open Now",
-                                isSelected: componentcontroller
-                                        .showingResulttabSelectd.value ==
-                                    "opennow"),
-                            SizedBox(
-                              width: 15.w,
-                            ),
-                            customCatgegorySelectedContainer(
-                                ontap: () {
-                                  componentcontroller
-                                      .showingResulttabSelectd("toprated");
-                                  componentcontroller.showingresultlist
-                                      .shuffle();
-                                },
-                                title: "Top Rated",
-                                isSelected: componentcontroller
-                                        .showingResulttabSelectd.value ==
-                                    "toprated"),
-                            SizedBox(
-                              width: 15.w,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // SingleChildScrollView(
+                      //   scrollDirection: Axis.horizontal,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: [
+                           
+                      //       // SizedBox(
+                      //       //   width: 15.w,
+                      //       // ),
+                      //       // customCatgegorySelectedContainer(
+                      //       //     ontap: () {
+                      //       //       componentcontroller
+                      //       //           .showingResulttabSelectd("distance");
+                      //       //       componentcontroller.showingresultlist
+                      //       //           .shuffle();
+                      //       //     },
+                      //       //     title: "Distance",
+                      //       //     isSelected: componentcontroller
+                      //       //             .showingResulttabSelectd.value ==
+                      //       //         "distance"),
+                      //       // SizedBox(
+                      //       //   width: 15.w,
+                      //       // ),
+                      //       // customCatgegorySelectedContainer(
+                      //       //     ontap: () {
+                      //       //       componentcontroller
+                      //       //           .showingResulttabSelectd("opennow");
+                      //       //       componentcontroller.showingresultlist
+                      //       //           .shuffle();
+                      //       //     },
+                      //       //     title: "Open Now",
+                      //       //     isSelected: componentcontroller
+                      //       //             .showingResulttabSelectd.value ==
+                      //       //         "opennow"),
+                      //       // SizedBox(
+                      //       //   width: 15.w,
+                      //       // ),
+                      //       // customCatgegorySelectedContainer(
+                      //       //     ontap: () {
+                      //       //       componentcontroller
+                      //       //           .showingResulttabSelectd("toprated");
+                      //       //       componentcontroller.showingresultlist
+                      //       //           .shuffle();
+                      //       //     },
+                      //       //     title: "Top Rated",
+                      //       //     isSelected: componentcontroller
+                      //       //             .showingResulttabSelectd.value ==
+                      //       //         "toprated"),
+                      //       // SizedBox(
+                      //       //   width: 15.w,
+                      //       // ),
+                      //     ],
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 10.h,
                       ),

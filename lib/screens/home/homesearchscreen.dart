@@ -7,6 +7,8 @@ import 'package:localview/controller/authenticationcontroller.dart';
 import 'package:localview/controller/userbusinesscontroller.dart';
 import 'package:localview/customwidgets/customappbar.dart';
 import 'package:localview/customwidgets/customappbutton.dart';
+import 'package:localview/customwidgets/customcircularprogress.dart';
+import 'package:localview/customwidgets/customsnackbar.dart';
 
 class HomeSearchScreen extends StatefulWidget {
   const HomeSearchScreen({super.key});
@@ -25,6 +27,8 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      userbusinesscontroller.getSearchHistory();
+
       userbusinesscontroller.isBusinessSearchMicLoading.value = false;
       userbusinesscontroller.businessSearchController.value.clear();
       userbusinesscontroller.mapplaceCountryregioncontroller.value.clear();
@@ -66,11 +70,18 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
         bottomNavigationBar: screentype == "searchhistory"
             ? Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                child: customButton(
-                    ontap: () {
-                      authcontroller.searchistorylist.clear();
-                    },
-                    text: "Clear History"),
+                child: Obx(
+                    () => userbusinesscontroller.clearsearchhistoryloading.value
+                        ? Center(
+                            child: customCircularProgress(),
+                          )
+                        : customButton(
+                            ontap: () {
+                              userbusinesscontroller.getsearchhistory.value =
+                                  null;
+                              userbusinesscontroller.clearSearchHistory();
+                            },
+                            text: "Clear History")),
               )
             : const SizedBox(),
         body: SingleChildScrollView(
@@ -179,7 +190,6 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                                 .businessSearchController.value
                                 .clear();
                             userbusinesscontroller.places.clear();
-                               
                           },
                         );
                       },
@@ -189,78 +199,146 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                   }
                 },
               ),
-              
               userbusinesscontroller.places.isNotEmpty
                   ? SizedBox(
                       height: 10.h,
                     )
                   : const SizedBox(),
-            userbusinesscontroller.getusersearchbusinessloading.value ? 
-            Image.asset("assets/images/mapsearchgif.gif",height: 200.h,width: 200.w,fit: BoxFit.fill,) :
-              SingleChildScrollView(
-                  child: Column(
-                children: List.generate(authcontroller.searchistorylist.length,
-                    (index) {
-                  final seachdata = authcontroller.searchistorylist[index];
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 15.w, vertical: 12.h),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: seachdata['title'] == null ||
-                                  seachdata['title'].toString().isEmpty
-                              ? CrossAxisAlignment.center
-                              : CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.history,
-                              color: AppColors.maincolor,
-                              size: 25.sp,
-                            ),
-                            SizedBox(
-                              width: 10.w,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  seachdata['title'] == null ||
-                                          seachdata['title'].toString().isEmpty
-                                      ? const SizedBox()
-                                      : Text(
-                                          seachdata['title'],
-                                          style: TextStyle(
-                                              fontSize: 12.sp,
-                                              fontFamily: FontFamily.helvetica,
-                                              color: AppColors.black),
+              userbusinesscontroller.getusersearchbusinessloading.value ||
+                      userbusinesscontroller.getsearchhistoryloading.value
+                  ? Center(
+                      child: Image.asset(
+                      "assets/images/mapsearchgif.gif",
+                      height: 200.h,
+                      width: 200.w,
+                      fit: BoxFit.fill,
+                    ))
+                  : userbusinesscontroller.getsearchhistory.value == null ||
+                          userbusinesscontroller.getsearchhistory.value?.data ==
+                              null ||
+                          userbusinesscontroller.getsearchhistory.value?.data
+                                  ?.categoryWiseSearch ==
+                              null
+                      ? const SizedBox()
+                      : SingleChildScrollView(
+                          child: Column(
+                          children: List.generate(
+                              userbusinesscontroller.getsearchhistory.value
+                                      ?.data?.categoryWiseSearch?.length ??
+                                  0, (index) {
+                            final seachdata = userbusinesscontroller
+                                .getsearchhistory
+                                .value
+                                ?.data
+                                ?.categoryWiseSearch?[index];
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15.w, vertical: 12.h),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.history,
+                                        color: AppColors.maincolor,
+                                        size: 25.sp,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            seachdata?.name == null ||
+                                                    seachdata!.name!.isEmpty
+                                                ? const SizedBox()
+                                                : Text(
+                                                    toCamelCase(seachdata.name),
+                                                    style: TextStyle(
+                                                        fontSize: 12.sp,
+                                                        fontFamily: FontFamily
+                                                            .helvetica,
+                                                        color: AppColors.black),
+                                                  ),
+                                          ],
                                         ),
-                                  Text(
-                                    seachdata['subtitle'],
-                                    style: TextStyle(
-                                        fontSize: seachdata['title'] == null ||
-                                                seachdata['title']
-                                                    .toString()
-                                                    .isEmpty
-                                            ? 12.sp
-                                            : 10.sp,
-                                        fontFamily: FontFamily.helvetica,
-                                        color: AppColors.color8F87),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: AppColors.black.withOpacity(0.1),
-                      )
-                    ],
-                  );
-                }),
-              ))
+                                ),
+                                ...List.generate(
+                                  seachdata?.searchHistory?.length ?? 0,
+                                  (historyIndex) {
+                                    final searchData =
+                                        seachdata?.searchHistory?[historyIndex];
+
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.w, vertical: 6.h),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            searchData?.address?.isEmpty ?? true
+                                                ? CrossAxisAlignment.center
+                                                : CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.history,
+                                            color: AppColors.maincolor,
+                                            size: 25.sp,
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  toCamelCase(
+                                                      searchData?.name ?? ''),
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    fontFamily:
+                                                        FontFamily.helvetica,
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  toCamelCase(
+                                                      searchData?.address ??
+                                                          ""),
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontFamily:
+                                                        FontFamily.helvetica,
+                                                    color: AppColors.color8F87,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                                // Divider(
+                                //   color: AppColors.black.withOpacity(0.1),
+                                // )
+                              ],
+                            );
+                          }),
+                        )),
+              SizedBox(
+                height: 15.h,
+              )
             ],
           ),
         )),

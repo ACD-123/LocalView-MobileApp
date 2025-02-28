@@ -31,19 +31,19 @@ class _HomeScreenState extends State<HomeScreen> {
       ScrollController();
   late GoogleMapController mapController;
 
-void _onMapCreated(GoogleMapController controller) {
-  mapController = controller;
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
 
-  Future.delayed(Duration(milliseconds: 2), () {
-    Set<Marker> markers = userbusinesscontroller.createMarkers();
-    print("Marker Delayed:${markers}");
-    if (markers.isNotEmpty) {
-      LatLng firstMarkerPosition = markers.first.position;
-      mapController!.animateCamera(CameraUpdate.newLatLngZoom(firstMarkerPosition, 15.0));
-    }
-  });
-}
-
+    Future.delayed(Duration(milliseconds: 2), () {
+      Set<Marker> markers = userbusinesscontroller.createMarkers();
+      print("Marker Delayed:${markers}");
+      if (markers.isNotEmpty) {
+        LatLng firstMarkerPosition = markers.first.position;
+        mapController!.animateCamera(
+            CameraUpdate.newLatLngZoom(firstMarkerPosition, 15.0));
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ void _onMapCreated(GoogleMapController controller) {
     userbusinesscontroller.requestLocationPermission();
     userbusinesscontroller.getbusinesscategoriesPage.value = 1;
     userbusinesscontroller.getBusinessCategories();
-            userbusinesscontroller.searchbusinessCategoryId.value = '';
+    userbusinesscontroller.searchbusinessCategoryId.value = '';
     businesscategoriesScrollController.addListener(() {
       if (businesscategoriesScrollController.position.pixels >=
           businesscategoriesScrollController.position.maxScrollExtent) {
@@ -61,26 +61,25 @@ void _onMapCreated(GoogleMapController controller) {
     });
   }
 
-@override
+  @override
   void dispose() {
     super.dispose();
     userbusinesscontroller.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            Obx(
-              () {
-                 Set<Marker> markers = userbusinesscontroller.createMarkers();
-                LatLng initialPosition = markers.isNotEmpty
-        ? markers.first.position 
-        : userbusinesscontroller.currentLocation.value;
-                return GoogleMap(
+            Obx(() {
+              Set<Marker> markers = userbusinesscontroller.createMarkers();
+              LatLng initialPosition = markers.isNotEmpty
+                  ? markers.first.position
+                  : userbusinesscontroller.currentLocation.value;
+              return GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: initialPosition,
                   zoom: 12.0,
@@ -88,17 +87,19 @@ void _onMapCreated(GoogleMapController controller) {
                 onMapCreated: _onMapCreated,
                 zoomControlsEnabled: false,
                 myLocationEnabled: true,
-               onCameraMove: (position) {
-        if (position.zoom < userbusinesscontroller.searchBusinessMapZoom.value) {
-          userbusinesscontroller.getUserSearchBusiness();
-        }
-        userbusinesscontroller.searchBusinessMapZoom.value = position.zoom;
-      },
+               
+                onCameraMove: (position) {
+                  if (position.zoom <
+                      userbusinesscontroller.searchBusinessMapZoom.value) {
+                    userbusinesscontroller.getUserSearchBusiness();
+                  }
+                  userbusinesscontroller.searchBusinessMapZoom.value =
+                      position.zoom;
+                },
                 myLocationButtonEnabled: false,
                 markers: userbusinesscontroller.createMarkers(),
               );
-              }
-            ),
+            }),
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
                 child: Obx(
@@ -278,16 +279,17 @@ void _onMapCreated(GoogleMapController controller) {
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: List.generate(3, (index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(right: 10.w),
-                                    child: customDummyLoader(
-                                      width: 100.w,
-                                        color: AppColors.black.withOpacity(0.5),
-                                        height: 30.h),
-                                  );
-                                })),
+                                      return Padding(
+                                        padding: EdgeInsets.only(right: 10.w),
+                                        child: customDummyLoader(
+                                            width: 100.w,
+                                            color: AppColors.black
+                                                .withOpacity(0.5),
+                                            height: 30.h),
+                                      );
+                                    })),
                               ),
                             )
                           : userbusinesscontroller
@@ -308,66 +310,76 @@ void _onMapCreated(GoogleMapController controller) {
                                     controller:
                                         businesscategoriesScrollController,
                                     scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                        children: [
-                                          ...List.generate(
-                                            userbusinesscontroller
-                                                    .getbusinesscategories
-                                                    .value
-                                                    ?.data
-                                                    ?.categories
-                                                    ?.length ??
-                                                0, (index) {
-                                      final categoriesdata =
+                                    child: Row(children: [
+                                      ...List.generate(
                                           userbusinesscontroller
-                                              .getbusinesscategories
+                                                  .getbusinesscategories
+                                                  .value
+                                                  ?.data
+                                                  ?.categories
+                                                  ?.length ??
+                                              0, (index) {
+                                        final categoriesdata =
+                                            userbusinesscontroller
+                                                .getbusinesscategories
+                                                .value
+                                                ?.data
+                                                ?.categories?[index];
+                                        return Padding(
+                                          padding: EdgeInsets.only(right: 10.w),
+                                          child: customCatgegoryContainer(
+                                            ontap: () {
+                                              // showModalBottomSheet(
+                                              //   context: context,
+                                              //   isScrollControlled: true,
+                                              //   backgroundColor:
+                                              //       Colors.transparent,
+                                              //   builder: (BuildContext context) {
+                                              //     return DraggableScrollableSheet(
+                                              //       expand: false,
+                                              //       initialChildSize: 0.5,
+                                              //       minChildSize: 0.3,
+                                              //       maxChildSize: 0.9,
+                                              //       builder: (BuildContext
+                                              //               context,
+                                              //           ScrollController
+                                              //               scrollController) {
+                                              //         return homescreenbottomsheet(
+                                              //             scrollController:
+                                              //                 scrollController);
+                                              //       },
+                                              //     );
+                                              //   },
+                                              // );
+                                              Get.toNamed(
+                                                  RouteConstants
+                                                      .homesearchscreen,
+                                                  arguments: "homescreen");
+                                              userbusinesscontroller
+                                                  .searchbusinessCategoryId
+                                                  .value = categoriesdata?.id
+                                                      .toString() ??
+                                                  "";
+                                            },
+                                            title: toCamelCase(categoriesdata
+                                                    ?.name
+                                                    .toString() ??
+                                                ""),
+                                            image: categoriesdata?.image ??
+                                                AppConstants.noimage,
+                                          ),
+                                        );
+                                      }),
+                                      userbusinesscontroller
+                                              .getbusinesscategoriesReloading
                                               .value
-                                              ?.data
-                                              ?.categories?[index];
-                                      return Padding(
-                                        padding: EdgeInsets.only(right: 10.w),
-                                        child: customCatgegoryContainer(
-                                          ontap: () {
-                                            // showModalBottomSheet(
-                                            //   context: context,
-                                            //   isScrollControlled: true,
-                                            //   backgroundColor:
-                                            //       Colors.transparent,
-                                            //   builder: (BuildContext context) {
-                                            //     return DraggableScrollableSheet(
-                                            //       expand: false,
-                                            //       initialChildSize: 0.5,
-                                            //       minChildSize: 0.3,
-                                            //       maxChildSize: 0.9,
-                                            //       builder: (BuildContext
-                                            //               context,
-                                            //           ScrollController
-                                            //               scrollController) {
-                                            //         return homescreenbottomsheet(
-                                            //             scrollController:
-                                            //                 scrollController);
-                                            //       },
-                                            //     );
-                                            //   },
-                                            // );
-                                         Get.toNamed(
-                                          RouteConstants.homesearchscreen,
-                                          arguments: "homescreen");
-                                        userbusinesscontroller.searchbusinessCategoryId.value = categoriesdata?.id.toString() ?? "";
-                                    
-                                          },
-                                          title: toCamelCase(
-                                              categoriesdata?.name.toString() ??
-                                                  ""),
-                                          image: categoriesdata?.image ??
-                                              AppConstants.noimage,
-                                        ),
-                                      );
-                                    }),
-
-                                    userbusinesscontroller.getbusinesscategoriesReloading.value ? 
-                                    SizedBox(height: 20.h,width: 20.w,child: customCircularProgress(),) : const SizedBox()
-                                        ]),
+                                          ? SizedBox(
+                                              height: 20.h,
+                                              width: 20.w,
+                                              child: customCircularProgress(),
+                                            )
+                                          : const SizedBox()
+                                    ]),
                                   ),
                                 )
                     ],

@@ -8,6 +8,8 @@ import 'package:http/http.dart';
 import 'package:localview/constants/appconstants.dart';
 import 'package:localview/customwidgets/customsnackbar.dart';
 import 'package:localview/models/getbusinesscategoriesmodel.dart';
+import 'package:localview/models/getbusinessdetailbyplaceidmodel.dart';
+import 'package:localview/models/getsearchhistorymodel.dart';
 import 'package:localview/models/getusersearchbusinessmodel.dart';
 import 'package:localview/repository/userbusinessrepo.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -148,6 +150,8 @@ class UserBusinessController extends GetxController {
   final RxDouble searchBusinessMapZoom = 12.0.obs;
   Future<void> getUserSearchBusiness() async {
     try {
+      if (getusersearchbusinessloading.value == true ||
+          getusersearchbusinessReloading.value == true) return;
       if (mapplaceSelectedLat.isEmpty) return;
       searchbusinessPage.isEmpty
           ? getusersearchbusinessloading.value = true
@@ -215,12 +219,17 @@ class UserBusinessController extends GetxController {
               businessmarker.latitude != null &&
               businessmarker.longitude != null)
           .map((businessmarker) => Marker(
-                markerId: MarkerId(
-                    "${businessmarker.title}_${businessmarker.latitude}_${businessmarker.longitude}"),
+                markerId: MarkerId(businessmarker.businessGuid == null ||
+                        businessmarker.businessGuid!.isEmpty
+                    ? businessmarker.placeId ?? ""
+                    : businessmarker.businessGuid ?? ""),
                 position: LatLng(
                   businessmarker.latitude!,
                   businessmarker.longitude!,
                 ),
+                 onTap: (){
+                  getBusinessDetailByPlaceId(placeId: placeId, categoryid: categoryid)
+                },
                 infoWindow: InfoWindow(
                   title: businessmarker.title ?? "Unknown",
                   snippet: businessmarker.category?.name ?? "Business Location",
@@ -286,6 +295,56 @@ class UserBusinessController extends GetxController {
     } catch (e) {
       getbusinesscategoriesReloading.value = false;
       getbusinesscategoriesLoading.value = false;
+    }
+  }
+
+///////////get search history
+  final Rx<GetSearchHistoryModel?> getsearchhistory =
+      Rx<GetSearchHistoryModel?>(null);
+  final RxBool getsearchhistoryloading = false.obs;
+  Future<void> getSearchHistory() async {
+    try {
+      getsearchhistoryloading.value = true;
+      await userBusinessRepo.getSearchHistory().then((value) {
+        getsearchhistory.value = value;
+        getsearchhistoryloading.value = false;
+      });
+    } catch (e) {
+      getsearchhistoryloading.value = false;
+    }
+  }
+
+/////////clear search history
+  final RxBool clearsearchhistoryloading = false.obs;
+  Future<void> clearSearchHistory() async {
+    try {
+      clearsearchhistoryloading.value = true;
+      await userBusinessRepo.clearSearchHistory();
+
+      clearsearchhistoryloading.value = false;
+    } catch (e) {
+      clearsearchhistoryloading.value = false;
+    }
+  }
+
+//////////get business details by place id
+  final Rx<GetBusinessDetailPlaceIdModel?> getbusinessdetailbyplaceid =
+      Rx<GetBusinessDetailPlaceIdModel?>(null);
+  final RxBool getbusinessdetailbyplaceidloading = false.obs;
+  Future<void> getBusinessDetailByPlaceId({
+    required String placeId,
+    required String categoryid,
+  }) async {
+    try {
+      getbusinessdetailbyplaceidloading.value = true;
+      await userBusinessRepo
+          .getBusinessDetailByPlaceId(placeId: placeId, categoryid: categoryid)
+          .then((value) {
+        getbusinessdetailbyplaceid.value = value;
+        getbusinessdetailbyplaceidloading.value = false;
+      });
+    } catch (e) {
+      getbusinessdetailbyplaceidloading.value = false;
     }
   }
 }

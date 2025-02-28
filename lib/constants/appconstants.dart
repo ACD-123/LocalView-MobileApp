@@ -18,4 +18,7 @@ class AppConstants {
   static const getblogbyid = 'blog/get-by-id/';
   static const usersearchbusiness = 'business/search?';
   static const getbusinesscategories = 'category';
+  static const getsearchhistory = 'search-history';
+  static const clearsearchhistory = 'search-history/clear';
+  static const getbusinessdetailbyplaceid = 'business/get-by-place-id/';
 }
